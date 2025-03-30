@@ -1,6 +1,6 @@
 import { IsArray, IsNotEmpty, IsString } from 'class-validator';
 
-export class CriarMembroDto {
+export class CriarUsuarioDto {
   @IsNotEmpty()
   @IsString()
   nome: string;
@@ -8,6 +8,14 @@ export class CriarMembroDto {
   @IsNotEmpty()
   @IsString()
   cargo: string;
+
+  @IsNotEmpty()
+  @IsString()
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  senha: string;
 
   @IsNotEmpty()
   @IsString()
