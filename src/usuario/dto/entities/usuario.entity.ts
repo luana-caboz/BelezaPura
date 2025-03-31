@@ -6,4 +6,10 @@ export type Usuario = {
   cargo: string;
   horario: string;
   servicos: string[];
+  perfil: Perfil;
 };
+
+export enum Perfil {
+  ADMIN = 'admin',
+  PROFISSIONAL = 'profissional',
+}

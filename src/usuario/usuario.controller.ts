@@ -1,54 +1,71 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Post,
+  UseGuards,
+  Request,
+  BadRequestException,
 } from '@nestjs/common';
+import { AuthService } from 'src/auth/auth.service';
+import { RolesGuard } from 'src/auth/jwt-auth.guard';
 import { AtualizarUsuarioDto } from 'src/usuario/dto/atualizar-usuario.dto';
 import { CriarUsuarioDto } from 'src/usuario/dto/criar-usuario.dto';
+import { Perfil } from 'src/usuario/dto/entities/usuario.entity';
 import { LoginDto } from 'src/usuario/dto/login-usuario.dto';
 import { UsuarioService } from 'src/usuario/usuario.service';
 
 @Controller('usuarios')
 export class UsuarioController {
-  constructor(private readonly usuarioService: UsuarioService) {}
+  constructor(
+    private readonly usuarioService: UsuarioService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
-    const user = await this.usuarioService.findByEmail(loginDto.email);
+    const user = await this.authService.validateUser(
+      loginDto.email,
+      loginDto.senha,
+    );
 
-    if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
-    }
-
-    if (user.senha !== loginDto.senha) {
-      throw new BadRequestException('Senha inválida');
-    }
-    return { userId: user.id, message: 'Login efetuado com sucesso!' };
+    return this.authService.login(user);
   }
 
+  @UseGuards(RolesGuard)
   @Post()
-  create(@Body() criarUsuarioDto: CriarUsuarioDto) {
+  async create(@Body() criarUsuarioDto: CriarUsuarioDto, @Request() req) {
+    const usuariosExistentes = await this.usuarioService.findAll();
+
+    if (usuariosExistentes.length == 0) {
+      criarUsuarioDto.perfil = Perfil.ADMIN;
+    } else {
+      const usuarioLogado = req.user;
+      if (!usuarioLogado || usuarioLogado.perfil !== Perfil.ADMIN) {
+        throw new BadRequestException(
+          'Apenas administradores podem criar usuários.',
+        );
+      }
+    }
+
     return this.usuarioService.create(criarUsuarioDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.usuarioService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.usuarioService.findOne(id);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() atualizarUsuarioDto: AtualizarUsuarioDto,
   ) {
@@ -56,7 +73,7 @@ export class UsuarioController {
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
+  async delete(@Param('id') id: string) {
     return this.usuarioService.delete(id);
   }
 }
