@@ -1,0 +1,14 @@
+{
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "user",
+    "password": "senha",
+    "database": "beleza_pura",
+    "entities": ["dist/**/*.entity{.ts,.js}"],
+    "migrations": ["dist/migrations/*.js"],
+    "cli": {
+      "migrationsDir": "src/migrations"
+    }
+  }
+  

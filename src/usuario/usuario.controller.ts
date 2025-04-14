@@ -1,21 +1,21 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  UseGuards,
-  Request,
-  BadRequestException,
+    BadRequestException,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch,
+    Post,
+    Request,
+    UseGuards,
 } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { RolesGuard } from 'src/auth/jwt-auth.guard';
 import { AtualizarUsuarioDto } from 'src/usuario/dto/atualizar-usuario.dto';
 import { CriarUsuarioDto } from 'src/usuario/dto/criar-usuario.dto';
-import { Perfil } from 'src/usuario/dto/entities/usuario.entity';
 import { LoginDto } from 'src/usuario/dto/login-usuario.dto';
+import { Perfil } from 'src/usuario/entities/usuario.entity';
 import { UsuarioService } from 'src/usuario/usuario.service';
 
 @Controller('usuarios')

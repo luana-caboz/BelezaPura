@@ -1,12 +1,12 @@
 import {
-  Injectable,
+  BadRequestException,
   CanActivate,
   ExecutionContext,
-  BadRequestException,
+  Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { Perfil } from 'src/usuario/dto/entities/usuario.entity';
+import { Perfil } from 'src/usuario/entities/usuario.entity';
 import { UsuarioService } from 'src/usuario/usuario.service';
 
 @Injectable()
