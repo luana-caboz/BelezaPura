@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from 'src/auth/auth.module';
+import { AgendamentoModule } from './agendamento/agendamento.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsuarioModule } from './usuario/usuario.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from 'src/auth/auth.module';
 import { ClientesModule } from './clientes/clientes.module';
-import { AgendamentoModule } from './agendamento/agendamento.module';
+import { PagamentoModule } from './pagamento/pagamento.module';
+import { UsuarioModule } from './usuario/usuario.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AgendamentoModule } from './agendamento/agendamento.module';
     AuthModule,
     ClientesModule,
     AgendamentoModule,
+    PagamentoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
