@@ -32,4 +32,7 @@ export class Agendamento {
 
   @Column()
   servico: string;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  valor_servico: number;
 }

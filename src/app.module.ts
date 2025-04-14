@@ -8,6 +8,7 @@ import { AppService } from './app.service';
 import { ClientesModule } from './clientes/clientes.module';
 import { PagamentoModule } from './pagamento/pagamento.module';
 import { UsuarioModule } from './usuario/usuario.module';
+import { FinanceiroModule } from './financeiro/financeiro.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UsuarioModule } from './usuario/usuario.module';
     ClientesModule,
     AgendamentoModule,
     PagamentoModule,
+    FinanceiroModule,
   ],
   controllers: [AppController],
   providers: [AppService],
