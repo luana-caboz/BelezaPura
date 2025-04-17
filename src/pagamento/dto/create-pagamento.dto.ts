@@ -1,14 +1,19 @@
-import { IsNotEmpty, IsNumber, IsDateString } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsDate } from 'class-validator';
 
 export class CreatePagamentoDto {
   @IsNotEmpty()
-  id_agendamento: number;
+  @IsString()
+  descricao: string;
 
   @IsNotEmpty()
   @IsNumber()
-  valor_pago: number;
+  valor: number;
 
   @IsNotEmpty()
-  @IsDateString()
-  data_pagamento: Date;
+  @IsDate()
+  dataPagamento: Date;
+
+  @IsNotEmpty()
+  @IsString()
+  metodoPagamento: string;
 }
