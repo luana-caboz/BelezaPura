@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { CreatePagamentoDto } from './dto/create-pagamento.dto';
 import { UpdatePagamentoDto } from './dto/update-pagamento.dto';
 import { Pagamento } from './entities/pagamento.entity';
-import { randomUUID } from 'crypto';
 
 @Injectable()
 export class PagamentoService {
@@ -10,7 +10,7 @@ export class PagamentoService {
 
   create(createPagamentoDto: CreatePagamentoDto): Pagamento {
     const novoPagamento: Pagamento = {
-      id: randomUUID(),
+      id_pagamento: randomUUID(),
       ...createPagamentoDto,
     };
     this.pagamentos.push(novoPagamento);
@@ -22,11 +22,11 @@ export class PagamentoService {
   }
 
   findOne(id: string): Pagamento {
-    return this.pagamentos.find((pagamento) => pagamento.id === id);
+    return this.pagamentos.find((pagamento) => pagamento.id_pagamento === id);
   }
 
   update(id: string, updatePagamentoDto: UpdatePagamentoDto): Pagamento {
-    const index = this.pagamentos.findIndex((pagamento) => pagamento.id === id);
+    const index = this.pagamentos.findIndex((pagamento) => pagamento.id_pagamento === id);
     if (index === -1) return null;
 
     this.pagamentos[index] = {
@@ -37,7 +37,7 @@ export class PagamentoService {
   }
 
   delete(id: string): boolean {
-    const index = this.pagamentos.findIndex((pagamento) => pagamento.id === id);
+    const index = this.pagamentos.findIndex((pagamento) => pagamento.id_pagamento === id);
     if (index === -1) return false;
 
     this.pagamentos.splice(index, 1);
