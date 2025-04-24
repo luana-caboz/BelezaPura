@@ -38,4 +38,32 @@ export class FinanceiroService {
       totalSaida: saidas?.totalSaida || 0,
     };
   }
+
+  async gerarRelatorioPorPeriodo(inicio: Date, fim: Date): Promise<{ totalEntrada: number, totalSaida: number }> {
+    const entradas = await this.financeiroRepository
+      .createQueryBuilder('f')
+      .where('f.categoria = :categoria AND f.data_criacao BETWEEN :inicio AND :fim', {
+        categoria: 'entrada',
+        inicio,
+        fim,
+      })
+      .select('SUM(f.preco)', 'totalEntrada')
+      .getRawOne();
+  
+    const saidas = await this.financeiroRepository
+      .createQueryBuilder('f')
+      .where('f.categoria = :categoria AND f.data_criacao BETWEEN :inicio AND :fim', {
+        categoria: 'saida',
+        inicio,
+        fim,
+      })
+      .select('SUM(f.preco)', 'totalSaida')
+      .getRawOne();
+  
+    return {
+      totalEntrada: Number(entradas?.totalEntrada) || 0,
+      totalSaida: Number(saidas?.totalSaida) || 0,
+    };
+  }
+  
 }

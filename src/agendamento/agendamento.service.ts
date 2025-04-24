@@ -43,6 +43,8 @@ export class AgendamentoService {
   }
 
   async findAll() {
+    await this.atualizarAgendamentosConcluidos();
+
     return this.agendamentoRepository.find({
       relations: ['cliente', 'profissional'],
       order: { data_hora: 'ASC'}
@@ -50,6 +52,8 @@ export class AgendamentoService {
   }
 
   async findOne(id: string) {
+    await this.atualizarAgendamentosConcluidos();
+    
     const agendamento = await this.agendamentoRepository.findOne({
       where: { id_agendamento: id },
       relations: ['cliente', 'profissional'],
@@ -79,5 +83,23 @@ export class AgendamentoService {
 
     Object.assign(agendamento, dto);
     return this.agendamentoRepository.save(agendamento);
+  }
+
+  async atualizarAgendamentosConcluidos() {
+    const agora = new Date();
+
+    const vencidos = await this.agendamentoRepository.find({
+      where: {
+      status: StatusAgendamento.PENDENTE,
+    },
+    });
+
+    const atualizacoes = vencidos.filter(a => new Date(a.data_hora) < agora)
+      .map(a => {
+        a.status = StatusAgendamento.CONCLUIDO;
+        return this.agendamentoRepository.save(a);
+      });
+
+      await Promise.all(atualizacoes);
   }
 }

@@ -1,9 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
-import { ConciliaçãoService } from './conciliacao.service';
+import { ConciliacaoService } from './conciliacao.service';
 
 @Controller('conciliacao')
-export class ConciliaçãoController {
-  constructor(private readonly conciliacaoService: ConciliaçãoService) {}
+export class ConciliacaoController {
+  constructor(private readonly conciliacaoService: ConciliacaoService) {}
 
   @Get('conciliar')
   async conciliar() {

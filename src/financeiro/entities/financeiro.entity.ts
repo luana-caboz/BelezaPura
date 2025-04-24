@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('financeiro')
 export class Financeiro {
@@ -19,4 +19,10 @@ export class Financeiro {
 
   @Column({ type: 'varchar', length: 255 })
   categoria: string;
+
+  @Column({ nullable: true })
+  id_agendamento?: string;
+
+  @CreateDateColumn()
+  data_criacao: Date;
 }
