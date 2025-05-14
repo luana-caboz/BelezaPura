@@ -1,46 +1,45 @@
-import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePagamentoDto } from './dto/create-pagamento.dto';
 import { UpdatePagamentoDto } from './dto/update-pagamento.dto';
 import { Pagamento } from './entities/pagamento.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PagamentoService {
-  private pagamentos: Pagamento[] = [];
+  constructor(
+    @InjectRepository(Pagamento)
+    private pagamentoRepository: Repository<Pagamento>,
+  ) {}
 
-  create(createPagamentoDto: CreatePagamentoDto): Pagamento {
-    const novoPagamento: Pagamento = {
-      id_pagamento: randomUUID(),
-      ...createPagamentoDto,
-    };
-    this.pagamentos.push(novoPagamento);
-    return novoPagamento;
+  async create(createPagamentoDto: CreatePagamentoDto): Promise<Pagamento> {
+    const novoPagamento = this.pagamentoRepository.create(createPagamentoDto);
+    return this.pagamentoRepository.save(novoPagamento);
   }
 
-  findAll(): Pagamento[] {
-    return this.pagamentos;
+  async findAll(): Promise<Pagamento[]> {
+    return this.pagamentoRepository.find();
   }
 
-  findOne(id: string): Pagamento {
-    return this.pagamentos.find((pagamento) => pagamento.id_pagamento === id);
+  async findOne(id: string): Promise<Pagamento> {
+    const pagamento = await this.pagamentoRepository.findOne({
+      where: { id_pagamento: id },
+    });
+    if (!pagamento) throw new NotFoundException('Pagamento não encontrado');
+    return pagamento;
   }
 
-  update(id: string, updatePagamentoDto: UpdatePagamentoDto): Pagamento {
-    const index = this.pagamentos.findIndex((pagamento) => pagamento.id_pagamento === id);
-    if (index === -1) return null;
-
-    this.pagamentos[index] = {
-      ...this.pagamentos[index],
-      ...updatePagamentoDto,
-    };
-    return this.pagamentos[index];
+  async update(
+    id: string,
+    updatePagamentoDto: UpdatePagamentoDto,
+  ): Promise<Pagamento> {
+    const pagamento = await this.findOne(id);
+    Object.assign(pagamento, updatePagamentoDto);
+    return this.pagamentoRepository.save(pagamento);
   }
 
-  delete(id: string): boolean {
-    const index = this.pagamentos.findIndex((pagamento) => pagamento.id_pagamento === id);
-    if (index === -1) return false;
-
-    this.pagamentos.splice(index, 1);
-    return true;
+  async delete(id: string): Promise<boolean> {
+    const result = await this.pagamentoRepository.delete(id);
+    return result.affected > 0;
   }
 }

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FinanceiroController } from './financeiro.controller';
-import { FinanceiroService } from './financeiro.service';
+import { FinanceiroController } from '../../src/financeiro/financeiro.controller';
+import { FinanceiroService } from '../../src/financeiro/financeiro.service';
 
 describe('FinanceiroController', () => {
   let controller: FinanceiroController;

@@ -11,7 +11,7 @@ export class ClientesService {
     @InjectRepository(Cliente)
     private readonly clienteRepository: Repository<Cliente>,
   ) {}
-  
+
   create(createClienteDto: CreateClienteDto) {
     const cliente = this.clienteRepository.create(createClienteDto);
     return this.clienteRepository.save(cliente);
@@ -22,7 +22,9 @@ export class ClientesService {
   }
 
   findOne(id: string) {
-    const cliente = this.clienteRepository.findOne({ where: { id_cliente: id } });
+    const cliente = this.clienteRepository.findOne({
+      where: { id_cliente: id },
+    });
     if (!cliente) {
       throw new NotFoundException(`Cliente com ID ${id} não encontrado`);
     }
@@ -40,4 +42,3 @@ export class ClientesService {
     return this.clienteRepository.remove(cliente);
   }
 }
-

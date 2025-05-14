@@ -22,16 +22,21 @@ export class UsuarioService {
   }
 
   async findOne(id: string): Promise<Usuario> {
-    const usuario = await this.usuarioRepository.findOne({ where: { id_profissional: id } });
+    const usuario = await this.usuarioRepository.findOne({
+      where: { id_profissional: id },
+    });
     if (!usuario) throw new NotFoundException('Usuário não encontrado');
     return usuario;
   }
 
   async findByEmail(email: string) {
-    return this.usuarioRepository.findOne({where: {email} } );
+    return this.usuarioRepository.findOne({ where: { email } });
   }
 
-  async update(id: string, atualizarUsuario: AtualizarUsuarioDto): Promise<Usuario> {
+  async update(
+    id: string,
+    atualizarUsuario: AtualizarUsuarioDto,
+  ): Promise<Usuario> {
     const usuario = await this.findOne(id);
     Object.assign(usuario, atualizarUsuario);
     return this.usuarioRepository.save(usuario);

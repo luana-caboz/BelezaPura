@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
- 
+
 export enum Perfil {
   ADMIN = 'admin',
   PROFISSIONAL = 'profissional',
@@ -7,7 +7,7 @@ export enum Perfil {
 
 @Entity('usuario')
 export class Usuario {
-  @PrimaryGeneratedColumn('uuid', {name: 'id_profissional'})
+  @PrimaryGeneratedColumn('uuid', { name: 'id_profissional' })
   id_profissional: string;
 
   @Column()
@@ -25,7 +25,7 @@ export class Usuario {
   @Column()
   horario: string;
 
-  @Column("text", { array: true })
+  @Column('text', { array: true })
   servicos: string[];
 
   @Column({ type: 'enum', enum: Perfil })
