@@ -22,6 +22,8 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const authorizationHeader = request.headers['authorization'];
 
+    console.log('Authorization Header:', authorizationHeader);
+
     const usuariosExistentes = await this.usuarioService.findAll();
     if (usuariosExistentes.length === 0) {
       return true;

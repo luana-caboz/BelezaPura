@@ -97,6 +97,7 @@ export class FinanceiroService {
   }
 
   async delete(id: string): Promise<boolean> {
+    console.log('ID a ser deletado:', id);
     const result = await this.financeiroRepository.delete(id);
     return result.affected > 0;
   }
