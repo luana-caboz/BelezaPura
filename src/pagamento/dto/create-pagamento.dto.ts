@@ -1,16 +1,21 @@
-import {
-  IsDate,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsDate, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreatePagamentoDto {
   @IsNotEmpty()
   @IsString()
-  @IsOptional()
-  descricao?: string;
+  descricao: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  valor: number;
+
+  @IsNotEmpty()
+  @IsDate()
+  dataPagamento: Date;
+
+  @IsNotEmpty()
+  @IsString()
+  metodoPagamento: string;
 
   @IsNotEmpty()
   @IsString()

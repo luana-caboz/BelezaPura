@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cliente } from 'src/clientes/entities/cliente.entity';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
@@ -26,15 +22,11 @@ export class AgendamentoService {
 
   async create(dto: CreateAgendamentoDto) {
     console.log('Dto:', dto);
-    const cliente = await this.clienteRepository.findOne({
-      where: { id_cliente: dto.id_cliente },
-    });
-    console.log('cliente:', cliente);
+    const cliente = await this.clienteRepository.findOne({ where: {id_cliente: dto.id_cliente}});
+    console.log('cliente:', cliente)
 
-    const profissional = await this.usuarioRepository.findOne({
-      where: { id_profissional: dto.id_profissional },
-    });
-    console.log('profissional:', profissional);
+    const profissional = await this.usuarioRepository.findOne({ where: { id_profissional: dto.id_profissional } });
+    console.log('profissional:', profissional)
 
     if (!cliente || !profissional) {
       throw new NotFoundException('Cliente ou profissional não encontrado');
@@ -55,13 +47,13 @@ export class AgendamentoService {
 
     return this.agendamentoRepository.find({
       relations: ['cliente', 'profissional'],
-      order: { data_hora: 'ASC' },
+      order: { data_hora: 'ASC'}
     });
   }
 
   async findOne(id: string) {
     await this.atualizarAgendamentosConcluidos();
-
+    
     const agendamento = await this.agendamentoRepository.findOne({
       where: { id_agendamento: id },
       relations: ['cliente', 'profissional'],
@@ -87,6 +79,7 @@ export class AgendamentoService {
     if (dto.status && !Object.values(StatusAgendamento).includes(dto.status)) {
       throw new BadRequestException('Status inválido');
     }
+    
 
     Object.assign(agendamento, dto);
     return this.agendamentoRepository.save(agendamento);
@@ -97,17 +90,16 @@ export class AgendamentoService {
 
     const vencidos = await this.agendamentoRepository.find({
       where: {
-        status: StatusAgendamento.PENDENTE,
-      },
+      status: StatusAgendamento.PENDENTE,
+    },
     });
 
-    const atualizacoes = vencidos
-      .filter((a) => new Date(a.data_hora) < agora)
-      .map((a) => {
+    const atualizacoes = vencidos.filter(a => new Date(a.data_hora) < agora)
+      .map(a => {
         a.status = StatusAgendamento.CONCLUIDO;
         return this.agendamentoRepository.save(a);
       });
 
-    await Promise.all(atualizacoes);
+      await Promise.all(atualizacoes);
   }
 }

@@ -38,8 +38,6 @@ export class UsuarioController {
   @UseGuards(RolesGuard)
   @Post()
   async create(@Body() criarUsuarioDto: CriarUsuarioDto, @Request() req) {
-    console.log('criarUsuarioDto', criarUsuarioDto);
-    console.log('req.user', req.user);
     const usuariosExistentes = await this.usuarioService.findAll();
 
     if (usuariosExistentes.length == 0) {

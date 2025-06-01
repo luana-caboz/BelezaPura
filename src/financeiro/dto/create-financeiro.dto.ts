@@ -1,9 +1,9 @@
-import { IsDecimal, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDecimal, IsNotEmpty, IsString } from 'class-validator';
 
 export class CriarFinanceiroDto {
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  descricao?: string;
+  descricao: string;
 
   @IsNotEmpty()
   @IsString()
@@ -20,7 +20,4 @@ export class CriarFinanceiroDto {
   @IsNotEmpty()
   @IsString()
   categoria: string;
-
-  @IsOptional()
-  id_agendamento?: string;
 }
