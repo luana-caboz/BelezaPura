@@ -1,6 +1,16 @@
 version: '3.8'
 
 services:
+  app:
+    build: .
+    container_name: beleza_pura_app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://user:password@postgres:5432/beleza_pura
+
   postgres:
     image: postgres:15
     container_name: beleza_pura_postgres

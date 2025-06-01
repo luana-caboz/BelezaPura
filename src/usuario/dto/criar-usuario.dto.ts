@@ -1,5 +1,5 @@
 import { IsArray, IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { Perfil } from 'src/usuario/dto/entities/usuario.entity';
+import { Perfil } from 'src/usuario/entities/usuario.entity';
 
 export class CriarUsuarioDto {
   @IsNotEmpty()
@@ -17,10 +17,6 @@ export class CriarUsuarioDto {
   @IsNotEmpty()
   @IsString()
   senha: string;
-
-  @IsNotEmpty()
-  @IsString()
-  horario: string;
 
   @IsNotEmpty()
   @IsArray()

@@ -1,50 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { AtualizarUsuarioDto } from 'src/usuario/dto/atualizar-usuario.dto';
 import { CriarUsuarioDto } from 'src/usuario/dto/criar-usuario.dto';
-import { Usuario } from 'src/usuario/dto/entities/usuario.entity';
+import { Usuario } from 'src/usuario/entities/usuario.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsuarioService {
-  private usuario: Usuario[] = [];
+  constructor(
+    @InjectRepository(Usuario)
+    private readonly usuarioRepository: Repository<Usuario>,
+  ) {}
 
-  create(criarUsuario: CriarUsuarioDto): Usuario {
-    const novoUsuario: Usuario = {
-      id: randomUUID(),
-      ...criarUsuario,
-    };
-    this.usuario.push(novoUsuario);
-    return novoUsuario;
+  async create(criarUsuario: CriarUsuarioDto): Promise<Usuario> {
+    const usuario = this.usuarioRepository.create(criarUsuario);
+    return this.usuarioRepository.save(usuario);
   }
 
-  findAll(): Usuario[] {
-    return this.usuario;
+  async findAll(): Promise<Usuario[]> {
+    return this.usuarioRepository.find();
   }
 
-  findOne(id: string): Usuario {
-    return this.usuario.find((usuario) => usuario.id === id);
+  async findOne(id: string): Promise<Usuario> {
+    const usuario = await this.usuarioRepository.findOne({
+      where: { id_profissional: id },
+    });
+    if (!usuario) throw new NotFoundException('Usuário não encontrado');
+    return usuario;
   }
 
   async findByEmail(email: string) {
-    return this.usuario.find((usuario) => usuario.email === email);
+    return this.usuarioRepository.findOne({ where: { email } });
   }
 
-  update(id: string, atualizarUsuario: AtualizarUsuarioDto): Usuario {
-    const index = this.usuario.findIndex((usuario) => usuario.id === id);
-    if (index === -1) return null;
-
-    this.usuario[index] = {
-      ...this.usuario[index],
-      ...atualizarUsuario,
-    };
-    return this.usuario[index];
+  async update(
+    id: string,
+    atualizarUsuario: AtualizarUsuarioDto,
+  ): Promise<Usuario> {
+    const usuario = await this.findOne(id);
+    Object.assign(usuario, atualizarUsuario);
+    return this.usuarioRepository.save(usuario);
   }
 
-  delete(id: string): boolean {
-    const index = this.usuario.findIndex((usuario) => usuario.id === id);
-    if (index === -1) return null;
-
-    this.usuario.splice(index, 1);
-    return true;
+  async delete(id: string): Promise<boolean> {
+    const result = await this.usuarioRepository.delete(id);
+    return result.affected > 0;
   }
 }
