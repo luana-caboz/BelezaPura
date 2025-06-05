@@ -1,11 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @Entity('pagamento')
+@Unique(['id_agendamento'])
 export class Pagamento {
   @PrimaryGeneratedColumn('uuid')
   id_pagamento: string;
 
-  @Column()
+  @Column({ nullable: false })
   id_agendamento: string;
 
   @Column('decimal', { precision: 10, scale: 2 })
