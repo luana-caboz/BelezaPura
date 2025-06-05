@@ -25,18 +25,31 @@ export class AgendamentoService {
   ) {}
 
   async create(dto: CreateAgendamentoDto) {
+<<<<<<< Updated upstream
     const cliente = await this.clienteRepository.findOne({
       where: { id_cliente: dto.id_cliente },
     });
+=======
+    console.log('Dto:', dto);
+    const cliente = await this.clienteRepository.findOne({
+      where: { id_cliente: dto.id_cliente },
+    });
+    console.log('cliente:', cliente);
+>>>>>>> Stashed changes
 
     const profissional = await this.usuarioRepository.findOne({
       where: { id_profissional: dto.id_profissional },
     });
+<<<<<<< Updated upstream
+=======
+    console.log('profissional:', profissional);
+>>>>>>> Stashed changes
 
     if (!cliente || !profissional) {
       throw new NotFoundException('Cliente ou profissional não encontrado');
     }
 
+<<<<<<< Updated upstream
     const dataHora = new Date(dto.data_hora);
 
     const conflito = await this.agendamentoRepository.findOne({
@@ -50,12 +63,17 @@ export class AgendamentoService {
         'Já existe um agendamento para este profissional neste horário',
       );
     }
+=======
+>>>>>>> Stashed changes
     const agendamento = this.agendamentoRepository.create({
       ...dto,
       cliente,
       profissional,
       status: StatusAgendamento.PENDENTE,
+<<<<<<< Updated upstream
       data_hora: dataHora,
+=======
+>>>>>>> Stashed changes
     });
 
     return this.agendamentoRepository.save(agendamento);
