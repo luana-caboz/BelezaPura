@@ -50,6 +50,7 @@ export class AgendamentoService {
         'Já existe um agendamento para este profissional neste horário',
       );
     }
+    
     const agendamento = this.agendamentoRepository.create({
       ...dto,
       cliente,

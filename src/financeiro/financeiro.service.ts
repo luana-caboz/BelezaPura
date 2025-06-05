@@ -13,6 +13,11 @@ export class FinanceiroService {
   ) {}
 
   async criarMovimentacao(dto: CriarFinanceiroDto): Promise<Financeiro> {
+    dto.categoria = dto.categoria
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .trim()
+      .toLowerCase();
     const financeiro = this.financeiroRepository.create(dto);
     return this.financeiroRepository.save(financeiro);
   }
@@ -33,21 +38,24 @@ export class FinanceiroService {
     totalEntrada: number;
     totalSaida: number;
   }> {
-    const entradas = await this.financeiroRepository
-      .createQueryBuilder('financeiro')
-      .where('financeiro.categoria = :categoria', { categoria: 'entrada' })
-      .select('SUM(financeiro.preco)', 'totalEntrada')
+    const entradasRaw = await this.financeiroRepository
+      .createQueryBuilder('f')
+      .select('SUM(f.preco)', 'total')
+      .where('f.categoria = :categoria', { categoria: 'entrada' })
       .getRawOne();
 
-    const saidas = await this.financeiroRepository
-      .createQueryBuilder('financeiro')
-      .where('financeiro.categoria = :categoria', { categoria: 'saida' })
-      .select('SUM(financeiro.preco)', 'totalSaida')
+    const saidasRaw = await this.financeiroRepository
+      .createQueryBuilder('f')
+      .select('SUM(f.preco)', 'total')
+      .where('f.categoria = :categoria', { categoria: 'saida' })
       .getRawOne();
+
+    const entrada = parseFloat(entradasRaw?.total ?? '0');
+    const saida = parseFloat(saidasRaw?.total ?? '0');
 
     return {
-      totalEntrada: entradas?.totalEntrada || 0,
-      totalSaida: saidas?.totalSaida || 0,
+      totalEntrada: entrada,
+      totalSaida: saida,
     };
   }
 

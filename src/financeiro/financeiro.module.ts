@@ -12,5 +12,6 @@ import { ConciliacaoController } from 'src/financeiro/conciliacao.controller';
   imports: [TypeOrmModule.forFeature([Pagamento, Agendamento, Financeiro])],
   controllers: [FinanceiroController, ConciliacaoController],
   providers: [FinanceiroService, ConciliacaoService],
+  exports: [FinanceiroService],
 })
 export class FinanceiroModule {}
