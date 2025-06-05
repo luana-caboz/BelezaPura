@@ -25,16 +25,13 @@ export class AgendamentoService {
   ) {}
 
   async create(dto: CreateAgendamentoDto) {
-    console.log('Dto:', dto);
     const cliente = await this.clienteRepository.findOne({
       where: { id_cliente: dto.id_cliente },
     });
-    console.log('cliente:', cliente);
 
     const profissional = await this.usuarioRepository.findOne({
       where: { id_profissional: dto.id_profissional },
     });
-    console.log('profissional:', profissional);
 
     if (!cliente || !profissional) {
       throw new NotFoundException('Cliente ou profissional não encontrado');
@@ -53,7 +50,7 @@ export class AgendamentoService {
         'Já existe um agendamento para este profissional neste horário',
       );
     }
-
+    
     const agendamento = this.agendamentoRepository.create({
       ...dto,
       cliente,
