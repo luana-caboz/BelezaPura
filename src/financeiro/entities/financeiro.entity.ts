@@ -1,4 +1,13 @@
+<<<<<<< Updated upstream
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+=======
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+>>>>>>> Stashed changes
 
 @Entity('financeiro')
 export class Financeiro {

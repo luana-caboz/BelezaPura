@@ -97,6 +97,10 @@ export class FinanceiroService {
   }
 
   async delete(id: string): Promise<boolean> {
+<<<<<<< Updated upstream
+=======
+    console.log('ID a ser deletado:', id);
+>>>>>>> Stashed changes
     const result = await this.financeiroRepository.delete(id);
     return result.affected > 0;
   }
